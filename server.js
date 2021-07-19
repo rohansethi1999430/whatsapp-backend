@@ -3,7 +3,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import Messages from './dbMessages.js';
-import Cors from 'cors'
+import Pusher from 'pusher'
 
 // app config
 const app=express();
@@ -21,6 +21,27 @@ mongoose.connect(connection_url,{
     useNewUrlParser:true,
     useUnifiedTopology:true
 })
+
+const db=mongoose.connection
+db.once('open',()=>{
+    console.log("DB is connected");
+    const msgCollection=db.collection("messagecontents");
+
+    const changeStream=msgCollection.watch();       
+    changeStream.on('change',(change)=>{
+        console.log(change);
+    })
+})
+
+
+
+const pusher = new Pusher({
+    appId: "1237411",
+    key: "257ecbbf7d3543e9da9d",
+    secret: "38233be7e405aa982ac2",
+    cluster: "ap2",
+    useTLS: true
+  });
 
 //?????
 
