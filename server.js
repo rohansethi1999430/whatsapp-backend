@@ -33,7 +33,7 @@ db.once('open',()=>{
         if(change.operationType==='insert'){
             const messageDetails=change.fullDocument;
             pusher.trigger('messages','inserted',{
-                name:messageDetails.user,
+                name:messageDetails.name,
                 message:messageDetails.message
             })
         }
