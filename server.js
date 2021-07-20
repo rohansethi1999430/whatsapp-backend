@@ -4,6 +4,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import Messages from './dbMessages.js';
 import Pusher from 'pusher'
+import cors from'cors'
 
 // app config
 const app=express();
@@ -11,6 +12,12 @@ const port= process.env.PORT || 9000
 
 //middleware
 app.use(express.json());
+// app.use((req,res,next)=>{
+//     res.setHeader("Access-Control-Allow-Origin","*");
+//     res.setHeader("Access-Control-Allow-Headers","*");
+//     next();
+// })
+app.use(cors())
 
 
 //DB config
@@ -34,7 +41,9 @@ db.once('open',()=>{
             const messageDetails=change.fullDocument;
             pusher.trigger('messages','inserted',{
                 name:messageDetails.name,
-                message:messageDetails.message
+                message:messageDetails.message,
+                timestamp:messageDetails.timestamp,
+                recieved:messageDetails.recieved
             })
         }
         else{
